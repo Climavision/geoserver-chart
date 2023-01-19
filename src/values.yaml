@@ -37,44 +37,44 @@ securityContext:
   runAsUser: 1000
 
 service:
-  type: ClusterIP
-  port: 80
+  type: LoadBalancer
+  port: 8080
 
 ingress:
   enabled: true
   className: ""
   annotations: {}
-    # kubernetes.io/ingress.class: nginx
-    # kubernetes.io/tls-acme: "true"
+  # kubernetes.io/ingress.class: nginx
+  # kubernetes.io/tls-acme: "true"
   hosts:
-    - host: geoserver.local
-      paths:
-        - path: /geoserver
-          pathType: ImplementationSpecific
-          backend:
-            serviceName: geoserver
-            servicePort: 8080
+  - host: geoserver.local
+    paths:
+    - path: /geoserver
+      pathType: ImplementationSpecific
+      backend:
+        serviceName: geoserver
+        servicePort: 8080
   tls: []
   #  - secretName: chart-example-tls
-  #    hosts:
-  #      - chart-example.local
+#    hosts:
+#      - chart-example.local
 
 resources: {}
-  # We usually recommend not to specify default resources and to leave this as a conscious
-  # choice for the user. This also increases chances charts run on environments with little
-  # resources, such as Minikube. If you do want to specify resources, uncomment the following
-  # lines, adjust them as necessary, and remove the curly braces after 'resources:'.
-  # limits:
-  #   cpu: 100m
-  #   memory: 128Mi
-  # requests:
-  #   cpu: 100m
-  #   memory: 128Mi
+# We usually recommend not to specify default resources and to leave this as a conscious
+# choice for the user. This also increases chances charts run on environments with little
+# resources, such as Minikube. If you do want to specify resources, uncomment the following
+# lines, adjust them as necessary, and remove the curly braces after 'resources:'.
+# limits:
+#   cpu: 100m
+#   memory: 128Mi
+# requests:
+#   cpu: 100m
+#   memory: 128Mi
 
 autoscaling:
   enabled: false
   minReplicas: 1
-  maxReplicas: 100
+  maxReplicas: 10
   targetCPUUtilizationPercentage: 80
   # targetMemoryUtilizationPercentage: 80
 
@@ -127,12 +127,7 @@ postgis:
     database: geoserver
     user: geoserver
 geoserver:
-  # space separated list of plugin URLs (see also this possibility below to format such string)
-  # plugins: "https://sourceforge.net/projects/geoserver/files/GeoServer/2.20.4/extensions/geoserver-2.20.4-monitor-plugin.zip \
-  #   https://sourceforge.net/projects/geoserver/files/GeoServer/2.20.4/extensions/geoserver-2.20.4-control-flow-plugin.zip"
-  # to enable audit logging once the pod is deployed go inside the geoserver pod and configure it in the datadir according to doc:
-  # https://docs.geoserver.org/latest/en/user/extensions/monitoring/audit.html
-  plugins: ""
+  plugins: "https://sourceforge.net/projects/geoserver/files/GeoServer/2.20.4/extensions/geoserver-2.20.4-monitor-plugin.zip https://sourceforge.net/projects/geoserver/files/GeoServer/2.20.4/extensions/geoserver-2.20.4-control-flow-plugin.zip"
   geoserver_log_location: "/var/geoserver/logs/$(POD_HOSTNAME).log"
   geoserver_audit_path: "/var/geoserver/audits"
   geoserver_heap_dump_dir: "/var/geoserver/memory_dumps"

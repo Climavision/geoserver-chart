@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: geoserver
+  labels:
+    app.kubernetes.io/name: geoserver
+data:
+  server.xml: |-
+    {{ .Files.Get "server.xml" }}
